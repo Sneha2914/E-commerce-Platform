@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: user-service
+    namespace: ecommerce
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: user-service
+    template:
+        metadata:
+            labels:
+                app: user-service
+        spec:
+            containers:
+                - name: user-service
+                  image: user-service:1.0
+                  imagePullPolicy: Never # For local Minikube development
+                  ports:
+                      - containerPort: 8081
+                  env:
+                      - name: NODE_ENV
+                        value: "development"
+                      - name: PORT
+                        value: "8081"
+                      - name: MONGODB_URI
+                        value: "mongodb://usersrv:userpass@mongodb:27017/userdb?authSource=admin"
+                      - name: JWT_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: user-service-secrets
+                                key: jwt-secret
+                      - name: JWT_EXPIRATION
+                        value: "24h"
+                      - name: SERVICE_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: user-service-secrets
+                                key: service-secret
+                  resources:
+                      requests:
+                          memory: "256Mi"
+                          cpu: "200m"
+                      limits:
+                          memory: "512Mi"
+                          cpu: "500m"
+                  livenessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8081
+                      initialDelaySeconds: 30
+                      periodSeconds: 10
+                  readinessProbe:
+                      httpGet:
+                          path: /health
+                          port: 8081
+                      initialDelaySeconds: 5
+                      periodSeconds: 5
