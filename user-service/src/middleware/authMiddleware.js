@@ -26,32 +26,26 @@ const extractUserFromToken = (req, res, next) => {
  * Middleware to validate service token for internal service calls
  * In development mode, it allows direct access without a service token
  */
+// Validate service token for internal service calls
 const validateServiceToken = (req, res, next) => {
-    // In development mode, allow direct access for testing
-    if (process.env.NODE_ENV === "development") {
-        logger.info("Development mode: skipping service token validation");
-        return next();
-    }
-
-    const serviceToken = req.headers["x-service-token"];
-
-    if (!serviceToken) {
-        logger.warn("Service token missing");
-        return res.status(401).json({ message: "Service token required" });
-    }
-
     try {
-        const decoded = jwt.verify(serviceToken, process.env.SERVICE_SECRET);
-        if (decoded.service !== "api-gateway") {
-            logger.warn("Invalid service token");
-            return res.status(401).json({ message: "Invalid service token" });
+        const authHeader = req.headers["x-service-token"];
+
+        if (!authHeader) {
+            throw new UnauthorizedError("No service token provided");
         }
+
+        const decoded = jwt.verify(authHeader, process.env.SERVICE_SECRET);
+        if (decoded.type !== "service") {
+            throw new UnauthorizedError("Invalid service token");
+        }
+
+        // Attach service info to request
+        req.service = decoded;
         next();
     } catch (error) {
-        logger.error("Service token validation error:", {
-            error: error.message,
-        });
-        return res.status(401).json({ message: "Invalid service token" });
+        logger.error("Service token validation error:", error.message);
+        throw new UnauthorizedError("Invalid service token");
     }
 };
 
@@ -75,10 +69,7 @@ const blockExternalRequests = (req, res, next) => {
  * Helper function to check if request is from API Gateway
  */
 const isFromApiGateway = (req) => {
-    return (
-        req.headers["x-service-token"] &&
-        req.headers["x-service-token"].startsWith("service_")
-    );
+    return req.headers["x-service-token"];
 };
 
 /**

@@ -11,7 +11,7 @@ const serviceId = Math.random().toString(36).substring(2, 10);
 // Load environment variables
 dotenv.config();
 logger.info("User Service starting up", {
-    port: process.env.PORT || 8081,
+    port: process.env.PORT,
     env: process.env.NODE_ENV,
     db: process.env.MONGODB_URI ? "Connected" : "Not configured",
 });
@@ -177,17 +177,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start server
-const PORT = process.env.PORT || 8081;
-const server = app.listen(PORT, () => {
-    logger.info(`User service running on port ${PORT}`, { serviceId });
-});
-
-// Handle server timeouts
-server.timeout = 120000; // 120 seconds
-server.keepAliveTimeout = 125000;
-server.headersTimeout = 130000;
-
 // Graceful shutdown
 process.on("SIGTERM", () => {
     logger.info("SIGTERM signal received: closing HTTP server", { serviceId });
@@ -196,5 +185,45 @@ process.on("SIGTERM", () => {
         process.exit(0);
     });
 });
+
+const validateEnvironmentVariables = () => {
+    const requiredVars = [
+        "PORT",
+        "MONGODB_URI",
+        "JWT_SECRET",
+        "SERVICE_SECRET",
+    ];
+
+    requiredVars.forEach((varName) => {
+        if (!process.env[varName]) {
+            logger.error(`Environment variable ${varName} is not set.`);
+        }
+    });
+};
+
+const startServer = async () => {
+    try {
+        await connectDB();
+        logger.info("Connected to MongoDB");
+
+        validateEnvironmentVariables();
+
+        // Start server
+        const PORT = process.env.PORT;
+        const server = app.listen(PORT, () => {
+            logger.info(`User service running on port ${PORT}`, { serviceId });
+        });
+
+        // Handle server timeouts
+        server.timeout = 120000; // 120 seconds
+        server.keepAliveTimeout = 125000;
+        server.headersTimeout = 130000;
+    } catch (error) {
+        logger.error("Failed to start server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
 
 module.exports = app;

@@ -1,12 +1,15 @@
 # Base image
-FROM node:14-alpine
+FROM node:18-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
 
 # Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
-RUN npm ci --only=production
+
+# Replace npm ci with npm install to be more resilient
+RUN npm install --omit=dev
 
 # Bundle app source
 COPY . .
@@ -19,4 +22,4 @@ USER appuser
 EXPOSE 8081
 
 # Start the application
-CMD ["npm", "start"] 
+CMD [ "node", "src/server.js" ] 

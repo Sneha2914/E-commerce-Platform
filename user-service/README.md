@@ -41,7 +41,7 @@ The User Service provides:
     PORT=8081
     MONGODB_URI=mongodb://localhost:27017/userdb
     JWT_SECRET=your_jwt_secret
-    NODE_ENV=development
+
     ```
 
 4. **Start the Service**
@@ -52,43 +52,6 @@ The User Service provides:
 
     # Production
     npm start
-    ```
-
-## Deployment
-
-### Docker Deployment
-
-1. **Build the Image**
-
-    ```bash
-    docker build -t user-service:1.0 .
-    ```
-
-2. **Run the Container**
-    ```bash
-    docker run -p 8081:8081 \
-      -e MONGODB_URI=mongodb://mongodb:27017/userdb \
-      -e JWT_SECRET=your_jwt_secret \
-      user-service:1.0
-    ```
-
-### Kubernetes Deployment
-
-1. **Create Namespace**
-
-    ```bash
-    kubectl create namespace ecommerce
-    ```
-
-2. **Apply Kubernetes Manifests**
-
-    ```bash
-    kubectl apply -f kubernetes/
-    ```
-
-3. **Verify Deployment**
-    ```bash
-    kubectl get all -n ecommerce -l app=user-service
     ```
 
 ## API Documentation
@@ -176,23 +139,3 @@ The User Service provides:
     - Check request payload size (limit: 10MB)
     - Monitor server timeouts
     - Check MongoDB query performance
-
-### Debug Commands
-
-```bash
-# Check pod status
-kubectl get pods -n ecommerce -l app=user-service
-
-# Check service logs
-kubectl logs -f deployment/user-service -n ecommerce
-
-# Check MongoDB connection
-kubectl exec -it deployment/user-service -n ecommerce -- mongosh
-
-# Check service health
-curl http://localhost:8081/health
-```
-
-## License
-
-MIT License

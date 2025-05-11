@@ -1,0 +1,264 @@
+{
+    "info": {
+        "name": "User Service",
+        "description": "Collection for the User Service API endpoints",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Register User",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/users/register",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", "register"]
+                }
+            }
+        },
+        {
+            "name": "Login User",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/users/login",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", "login"]
+                }
+            }
+        },
+        {
+            "name": "Get User Profile",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/users/profile",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", "profile"]
+                }
+            }
+        },
+        {
+            "name": "Update User Profile",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"password\": \"newpassword123\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/users/profile",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", "profile"]
+                }
+            }
+        },
+        {
+            "name": "Delete User Profile",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/users/profile",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", "profile"]
+                }
+            }
+        },
+        {
+            "name": "Get All Users (Admin)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/users",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users"]
+                }
+            }
+        },
+        {
+            "name": "Get User by ID (Admin)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/users/:id",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", ":id"],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "user_id"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Update User (Admin)",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"updated@example.com\",\n    \"isAdmin\": true\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/users/:id",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", ":id"],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "user_id"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Delete User by ID (Admin)",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "x-service-token",
+                        "value": "{{service_token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/users/:id",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "users", ":id"],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "user_id"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8081"
+        },
+        {
+            "key": "token",
+            "value": "your_jwt_token"
+        },
+        {
+            "key": "service_token",
+            "value": "your_service_token"
+        }
+    ]
+}
